@@ -2,6 +2,7 @@ module Chess.Board where
 
 import Dict             exposing (Dict)
 import Html             exposing (Html, text, table, tr, td)
+import Html.Attributes  exposing (style)
 import Chess.Piece      exposing (..)
 import Chess.Color      exposing (..)
 import List             exposing (..)
@@ -22,7 +23,6 @@ startingBoard =
         createPawnLine White 2,
         createEmptyLine 3,
         createEmptyLine 4,
-        createEmptyLine 5,
         createEmptyLine 5,
         createEmptyLine 6,
         createPawnLine Black 7,
@@ -50,11 +50,19 @@ createLine row piece =
     map (\col -> {color = squareColor col row, piece = piece}) [1..8]
 
 
+squareStyle square =
+    style
+    [
+        ("backgroundColor", (bgColor square.color)),
+        ("width", "50px"),
+        ("height", "50px")
+    ]
+
 showSquare : Square -> Html
 showSquare square =
-    td [] [
+    td [squareStyle square] [
         case square.piece of
-            Nothing -> text "x"
+            Nothing -> text ""
             Just val -> text (toString val.figure)
     ]
 
