@@ -1,17 +1,14 @@
 module Chess.Board where
 
-import Dict             exposing (Dict)
-import Html             exposing (Html, text, table, tr, td)
-import Html.Attributes  exposing (style)
 import Chess.Piece      exposing (..)
 import Chess.Color      exposing (..)
 import List             exposing (..)
 
 type alias Square = {color: Color, piece: Maybe Piece}
 squareColor : Int -> Int -> Color
-squareColor col row = case row % 2 == col % 2 of
-    True -> White
-    False -> Black
+squareColor col row = case row % 2 == col % 2 of -- it's the opposite of normal algo since I'm indexing from 1 to 8
+    True -> Black
+    False -> White
 
 
 type alias Board = List(List Square)
@@ -48,33 +45,3 @@ createEmptyLine row =
 createLine : Int -> Maybe Piece -> List Square
 createLine row piece =
     map (\col -> {color = squareColor col row, piece = piece}) [1..8]
-
-
-squareStyle square =
-    style
-    [
-        ("backgroundColor", (bgColor square.color)),
-        ("width", "50px"),
-        ("height", "50px")
-    ]
-
-showSquare : Square -> Html
-showSquare square =
-    td [squareStyle square] [
-        case square.piece of
-            Nothing -> text ""
-            Just val -> text (toString val.figure)
-    ]
-
-showLine : List(Square) -> Html
-showLine line =
-    tr [] (
-        map showSquare line
-    )
-
-
-showBoard : Board -> Html
-showBoard board =
-    table [] (
-        map showLine board
-    )
