@@ -18,6 +18,6 @@ view model =
 
 type Msg = SelectPiece | MoveTo
 
--- update: Msg -> Board -> (Board, Cmd ?)
+update: Msg -> Board -> (Board, Cmd Msg)
 update msg model =
     (model, Cmd.none)

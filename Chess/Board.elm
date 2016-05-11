@@ -3,6 +3,7 @@ module Chess.Board exposing (..)
 import Chess.Piece      exposing (..)
 import Chess.Color      exposing (..)
 import List             exposing (..)
+import Dict             exposing (Dict, values)
 
 type alias Square = {color: Color, piece: Maybe Piece}
 squareColor : Int -> Int -> Color
@@ -26,12 +27,28 @@ startingBoard =
         createFigureLine Black 8
     ]
 
-baseFigurePos : List (Int, Figure)
-baseFigurePos = [(1, Rook), (2, Knight), (3, Bishop), (4, Queen), (5, King), (6, Bishop), (7, Knight), (8, Rook)]
+baseFigurePos : Dict Int Figure
+baseFigurePos = Dict.fromList
+  [
+    (1, Rook),
+    (2, Knight),
+    (3, Bishop),
+    (4, Queen),
+    (5, King),
+    (6, Bishop),
+    (7, Knight),
+    (8, Rook)
+  ]
+
+createSquare : Int -> Color -> Int -> Figure -> Square
+createSquare row color col figure =
+  let piece = Just { figure = figure, color = color } in
+  { color = squareColor col row, piece = piece }
 
 createFigureLine : Color -> Int -> List Square
 createFigureLine color row =
-    map (\figurePos -> {color = squareColor (fst figurePos) row, piece = Just({figure = snd figurePos, color = color})}) baseFigurePos
+  -- Dict.map (\pos figure -> {color = squareColor pos row, piece = Just({figure = figure, color = color})}) baseFigurePos |> values
+  baseFigurePos |> Dict.map(createSquare row color) |> values
 
 
 createPawnLine : Color -> Int -> List Square
@@ -44,4 +61,6 @@ createEmptyLine row =
 
 createLine : Int -> Maybe Piece -> List Square
 createLine row piece =
-    map (\col -> {color = squareColor col row, piece = piece}) [1..8]
+    let for = flip map in
+    for [1..8] <| \col -> { color = squareColor col row, piece = piece }
+    -- map (\col -> {color = squareColor col row, piece = piece}) [1..8]

@@ -52,14 +52,17 @@ showSquare square =
 showLine : List(Square) -> Html msg
 showLine line =
     tr [] (
-        map showSquare line
+        line |> map showSquare
     )
 
 
 showBoard : Board -> Html msg
 showBoard board =
     table [] (
-        map showLine (reverse board)
+      board |> reverse |> map showLine
+      -- board |> reverse << map showLine
+      -- showLine `map` reverse board
+      -- map showLine (reverse board)
     )
 
 showNotif : Board -> Html msg
