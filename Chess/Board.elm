@@ -1,4 +1,4 @@
-module Chess.Board where
+module Chess.Board exposing (..)
 
 import Chess.Piece      exposing (..)
 import Chess.Color      exposing (..)

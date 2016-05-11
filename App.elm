@@ -1,27 +1,23 @@
-import Html exposing (div, button, text, table, tr, td)
-import Html.Events exposing (onClick)
-import Html.Attributes exposing (style)
-import StartApp.Simple as StartApp
-import Chess.Board exposing (Board, startingBoard)
+import Html                 exposing (Html, div)
+import Html.Attributes      exposing (style)
+import Html.App             as App
+import Chess.Board          exposing (Board, startingBoard)
 import Chess.View.HtmlBoard exposing (showBoard, showNotif)
 
 
 main =
-  StartApp.start { model = chessBoard, view = view, update = update }
+  App.program { init = (startingBoard, Cmd.none), view = view, update = update, subscriptions = \_ -> Sub.none  }
 
 
-chessBoard : Board
-chessBoard = startingBoard
-
-view : Address -> Model -> Html
-view address model =
+view : Board -> Html msg
+view model =
     div [style [("display", "flex")]] [
-        showBoard address model,
+        showBoard model,
         showNotif model
     ]
 
-type Action = Increment | Decrement
+type Msg = SelectPiece | MoveTo
 
-
-update action model =
-    model
+-- update: Msg -> Board -> (Board, Cmd ?)
+update msg model =
+    (model, Cmd.none)

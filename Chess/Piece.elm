@@ -1,4 +1,4 @@
-module Chess.Piece where
+module Chess.Piece exposing (..)
 
 import Chess.Color exposing (Color)
 
