@@ -1,12 +1,13 @@
 module Chess.View.HtmlBoard exposing (showBoard, showNotif)
 
-import List             exposing (..)
-import Html             exposing (Html, text, div, table, tr, td, img)
-import Html.Attributes  exposing (style, src)
-import Html.Events      exposing (onClick)
-import Chess.Color      exposing (..)
-import Chess.Board      exposing (Square, Board)
-import Chess.Piece      exposing (Piece)
+import List                 exposing (..)
+import Html                 exposing (Html, text, div, table, tr, td, img)
+import Html.Attributes      exposing (style, src)
+import Html.Events          exposing (onClick)
+import Chess.Color          exposing (..)
+import Chess.Board          exposing (Square, Board)
+import Chess.Piece          exposing (Piece)
+import Chess.Events         exposing (..)
 
 bgColor : Color -> String
 bgColor color = case color of
@@ -36,12 +37,12 @@ imgStyle =
         ("cursor", "pointer")
     ]
 
-showPiece: Piece -> Html msg
+showPiece: Piece -> Html Message
 showPiece piece =
     let figure = "img/pieces/" ++ toString piece.color ++ "-" ++ toString piece.figure ++ ".png" in
-    img [(src figure), imgStyle] []
+    img [(src figure), imgStyle , onClick (Select piece)] []
 
-showSquare : Square -> Html msg
+showSquare : Square -> Html Message
 showSquare square =
     td [squareStyle square] [
         case square.piece of
@@ -49,14 +50,14 @@ showSquare square =
             Just piece -> showPiece piece
     ]
 
-showLine : List(Square) -> Html msg
+showLine : List(Square) -> Html Message
 showLine line =
     tr [] (
         line |> map showSquare
     )
 
 
-showBoard : Board -> Html msg
+showBoard : Board -> Html Message
 showBoard board =
     table [] (
       board |> reverse |> map showLine
@@ -65,7 +66,7 @@ showBoard board =
       -- map showLine (reverse board)
     )
 
-showNotif : Board -> Html msg
+showNotif : Board -> Html Message
 showNotif board =
     div [style [("flex", "1")]] [
 

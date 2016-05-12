@@ -1,23 +1,24 @@
 import Html                 exposing (Html, div)
 import Html.Attributes      exposing (style)
 import Html.App             as App
-import Chess.Board          exposing (Board, startingBoard)
+import Chess.Board          exposing (Board, Square, startingBoard)
+import Chess.Piece          exposing (Piece)
 import Chess.View.HtmlBoard exposing (showBoard, showNotif)
-
+import Chess.Events         exposing (..)
 
 main =
   App.program { init = (startingBoard, Cmd.none), view = view, update = update, subscriptions = \_ -> Sub.none  }
 
 
-view : Board -> Html msg
+view : Board -> Html Message
 view model =
-    div [style [("display", "flex")]] [
-        showBoard model,
-        showNotif model
-    ]
+  div [style [("display", "flex")]] [
+    showBoard model,
+    showNotif model
+  ]
 
-type Msg = SelectPiece | MoveTo
-
-update: Msg -> Board -> (Board, Cmd Msg)
+update: Message -> Board -> (Board, Cmd Message)
 update msg model =
-    (model, Cmd.none)
+  case msg of
+    Select piece -> (model, Cmd.none)
+    MoveTo square -> (model, Cmd.none)
