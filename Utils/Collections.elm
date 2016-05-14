@@ -1,13 +1,27 @@
 module Utils.Collections exposing (..)
 
-import List exposing (map)
+import List exposing (map, take, drop, head)
 
-updateWhere : List a -> (a -> Bool) -> (a -> a) -> List a
-updateWhere list find transform =
+type alias Predicate a = a -> Bool
+
+updateIf : Predicate a -> (a -> a) -> (a -> a) -> a -> a
+updateIf find matchTransform dontMatchTransform item =
+  case find item of
+    True -> matchTransform item
+    False -> dontMatchTransform item
+
+updateWhere : Predicate a -> (a -> a) -> (a -> a) -> List a -> List a
+updateWhere find matchTransform dontMatchTransform list =
+  map (updateIf find matchTransform dontMatchTransform) list
+
+updateListWhere : Predicate a -> (a -> a) -> (a -> a) -> List (List a) -> List (List a)
+updateListWhere find matchTransform dontMatchTransform list =
   let
-    update item =
-      case find item of
-        True -> transform item
-        False -> item
+    updates = \items -> map (updateIf find matchTransform dontMatchTransform) items
   in
-  map update list
+  map updates list
+
+
+getAt : Int -> List a -> Maybe a
+getAt idx list =
+  head (take idx (drop idx list))

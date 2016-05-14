@@ -1,7 +1,7 @@
 import Html                 exposing (Html, div)
 import Html.Attributes      exposing (style)
 import Html.App             as App
-import Chess.Board          exposing (Board, Square, startingBoard)
+import Chess.Board          exposing (Board, Square, startingBoard, selectSquare)
 import Chess.Piece          exposing (Piece)
 import Chess.View.HtmlBoard exposing (showBoard, showNotif)
 import Chess.Events         exposing (..)
@@ -11,14 +11,14 @@ main =
 
 
 view : Board -> Html Message
-view model =
+view board =
   div [style [("display", "flex")]] [
-    showBoard model,
-    showNotif model
+    showBoard board,
+    showNotif board
   ]
 
 update: Message -> Board -> (Board, Cmd Message)
-update msg model =
+update msg board =
   case msg of
-    Select piece -> (model, Cmd.none)
-    MoveTo square -> (model, Cmd.none)
+    Select piece -> (selectSquare piece.col piece.row board, Cmd.none)
+    MoveTo square -> (board, Cmd.none)

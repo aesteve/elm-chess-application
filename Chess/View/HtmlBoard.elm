@@ -20,14 +20,23 @@ fgColor color = case color of
     Black -> "#000000"
 
 squareStyle square =
-    style
-    [
-        ("backgroundColor", (bgColor square.color)),
-        ("width", "85px"),
-        ("height", "85px"),
-        ("textAlign", "center"),
-        ("verticalAlign", "middle")
-    ]
+  let border = case square.selected of
+    True -> "3px solid #333"
+    False -> "3px solid " ++ bgColor square.color
+  in
+  let background = case square.available of
+    True -> "red"
+    False -> bgColor square.color
+  in
+  style
+  [
+      ("backgroundColor", background),
+      ("width", "85px"),
+      ("height", "85px"),
+      ("textAlign", "center"),
+      ("verticalAlign", "middle"),
+      ("border", border)
+  ]
 
 imgStyle =
     style
@@ -37,17 +46,17 @@ imgStyle =
         ("cursor", "pointer")
     ]
 
-showPiece: Piece -> Html Message
-showPiece piece =
-    let figure = "img/pieces/" ++ toString piece.color ++ "-" ++ toString piece.figure ++ ".png" in
-    img [(src figure), imgStyle , onClick (Select piece)] []
+showPiece: Square -> Piece -> Html Message
+showPiece square piece =
+  let figure = "img/pieces/" ++ toString piece.color ++ "-" ++ toString piece.figure ++ ".png" in
+  img [(src figure), imgStyle , onClick (Select square)] []
 
 showSquare : Square -> Html Message
 showSquare square =
     td [squareStyle square] [
         case square.piece of
             Nothing -> text ""
-            Just piece -> showPiece piece
+            Just piece -> showPiece square piece
     ]
 
 showLine : List(Square) -> Html Message
